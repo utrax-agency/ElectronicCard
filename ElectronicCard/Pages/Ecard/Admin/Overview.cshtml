@@ -1,0 +1,228 @@
+﻿@page
+@model ElectronicCard.Pages.Ecard.Admin.AllProvincesModel
+@{
+    ViewData["Title"] = "Province Statistics Dashboard";
+    Layout = null;
+}
+
+<!-- Include Tailwind CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .chart-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+<div class="min-h-screen bg-gray-900 text-white">
+    <div class="container mx-auto px-6 py-12">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-12">
+            <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                Province Statistics Dashboard
+            </h1>
+            <div class="text-sm text-gray-400">
+                Last Updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")
+            </div>
+            <div class="d-flex justify-content-end mb-4">
+                <a href="/Ecard/Approval" class="btn btn-primary btn-lg shadow rounded-pill px-5">
+                    <i class="bi bi-check-circle-fill me-2"></i> Approvals
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Province Selector -->
+        <div class="mb-8">
+            <label for="provinceSelector" class="block text-lg font-semibold text-blue-400">Select a Province:</label>
+            <select id="provinceSelector" class="mt-2 p-2 rounded bg-gray-800 text-white border border-gray-700" onchange="location = this.value;">
+                <option value="">-- Select a province --</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/1">Buddu</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/2">Busiro</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/3">Bugwere</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/4">Kyagwe</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/5">Mawokota</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/6">Ssingo</option>
+                <option value="/Ecard/ProvinceUser/ProvinceSavings/7">Buluuli</option>
+            </select>
+
+
+
+
+               
+
+           
+        </div>
+        <!-- Main Content -->
+        <div class="space-y-8">
+            <!-- Province Selector -->
+            <div class="flex justify-center">
+                <label for="provinceSelector" class="mr-4 text-lg font-medium">Select Province:</label>
+                <select id="provinceSelector" class="p-2 border rounded-lg">
+                    <option value="" selected disabled>Choose a Province</option>
+                </select>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Province Savings Chart -->
+                <div class="chart-container backdrop-blur-sm">
+                    <h2 class="text-2xl font-semibold mb-6 text-blue-400">Province Savings</h2>
+                    <div class="relative h-[400px]">
+                        <canvas id="provinceSavingsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Monthly Trends Chart -->
+                <div class="chart-container backdrop-blur-sm">
+                    <h2 class="text-2xl font-semibold mb-6 text-purple-400">Monthly Savings Trends</h2>
+                    <div class="relative h-[400px]">
+                        <canvas id="monthlyTrendsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Chart instances
+            let provinceSavingsChart = null;
+            let monthlyTrendsChart = null;
+
+            // Fetch provinces and populate the dropdown
+            async function fetchProvinces() {
+                try {
+                    const response = await fetch('/Ecard/Admin/GetProvinces'); // Adjust this endpoint if needed
+                    const provinces = await response.json();
+
+                    const provinceSelector = document.getElementById('provinceSelector');
+                    provinces.forEach(province => {
+                        const option = document.createElement('option');
+                        option.value = province.id; // Assuming each province has an ID
+                        option.textContent = province.name; // Assuming each province has a name
+                        provinceSelector.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error fetching provinces:', error);
+                }
+            }
+
+            // Initialize Province Savings Chart
+            function setupProvinceSavingsChart(data) {
+                const ctx = document.getElementById('provinceSavingsChart').getContext('2d');
+                if (provinceSavingsChart) {
+                    provinceSavingsChart.destroy(); // Destroy existing chart if any
+                }
+
+                provinceSavingsChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.pieData, // Pie chart percentage data
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(153, 102, 255, 0.6)',
+                                'rgba(255, 159, 64, 0.6)'
+                            ],
+                            borderColor: 'rgba(0, 0, 0, 0.1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)}%`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Initialize Monthly Trends Chart
+            function setupMonthlyTrendsChart(data) {
+                const ctx = document.getElementById('monthlyTrendsChart').getContext('2d');
+                if (monthlyTrendsChart) {
+                    monthlyTrendsChart.destroy(); // Destroy existing chart if any
+                }
+
+                const datasets = Object.entries(data).map(([province, monthlyData], index) => {
+                    const colors = ['rgba(59, 130, 246, 1)', 'rgba(16, 185, 129, 1)', 'rgba(168, 85, 247, 1)'];
+                    return {
+                        label: province,
+                        data: Object.values(monthlyData),
+                        borderColor: colors[index % colors.length],
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: false
+                    };
+                });
+
+                monthlyTrendsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Object.keys(Object.values(data)[0] || {}), // Assuming all provinces have same months
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Months'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Savings Amount'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Fetch chart data and initialize charts
+            async function fetchChartData() {
+                try {
+                    const response = await fetch('/Ecard/Admin/GetProvinceData');
+                    const data = await response.json();
+
+                    setupProvinceSavingsChart(data.ProvinceSavingsData);
+                    setupMonthlyTrendsChart(data.MonthlyProvinceSavings);
+                } catch (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            }
+
+            // Initialize dropdown and charts on DOM load
+            document.addEventListener('DOMContentLoaded', async () => {
+                await fetchProvinces(); // Populate the province dropdown
+                await fetchChartData(); // Load and initialize charts for all provinces
+            });
+        </script>
+

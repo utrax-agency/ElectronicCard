@@ -1,0 +1,173 @@
+﻿@page
+@model ElectronicCard.Pages.Ecard.ChairmanSignupModel
+@{
+    ViewData["Title"] = "Create New Group";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ElectronicCard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: url('/Images/EcardBackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        h4 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2>Create New Group</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                            <!-- Group Name -->
+                            <div class="mb-3">
+                                <label asp-for="Input.Group_Name" class="form-label">Group Name</label>
+                                <input asp-for="Input.Group_Name" class="form-control" placeholder="Enter group name" />
+                                <span asp-validation-for="Input.Group_Name" class="text-danger"></span>
+                            </div>
+
+                            <!-- Province Selection -->
+                            <div class="mb-3">
+                                <label asp-for="Input.Province_id" class="form-label">Province</label>
+                                <select asp-for="Input.Province_id" asp-items="Model.Provinces" class="form-select">
+                                    <option value="">Select Province</option>
+                                    <option value="1">Buddu</option>
+                                    <option value="2">Busiro</option>
+                                    <option value="3">Bugwere</option>
+                                    <option value="4">Kyagwe</option>
+                                    <option value="5">Mawokota</option>
+                                    <option value="6">Ssingo</option>
+                                    <option value="7">Buluuli</option>
+                                </select>
+                                <span asp-validation-for="Input.Province_id" class="text-danger"></span>
+                            </div>
+
+                            <!-- Chairman Details -->
+                            <h4>Chairman Details</h4>
+                            <div class="mb-3">
+                                <label asp-for="Input.Chairman_FirstName" class="form-label">First Name</label>
+                                <input asp-for="Input.Chairman_FirstName" class="form-control" placeholder="Enter chairman's name" />
+                                <span asp-validation-for="Input.Chairman_FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Chairman_LastName" class="form-label">Last Name</label>
+                                <input asp-for="Input.Chairman_LastName" class="form-control" placeholder="Enter chairman's name" />
+                                <span asp-validation-for="Input.Chairman_LastName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Chairman_Email" class="form-label">Email</label>
+                                <input asp-for="Input.Chairman_Email" type="email" class="form-control" placeholder="Enter chairman's email" />
+                                <span asp-validation-for="Input.Chairman_Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Chairman_PhoneNumber" class="form-label">Phone Number</label>
+                                <input asp-for="Input.Chairman_PhoneNumber" type="tel" class="form-control" placeholder="Enter chairman's phone number" />
+                                <span asp-validation-for="Input.Chairman_PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <!-- Treasurer Details -->
+                            <h4>Treasurer Details</h4>
+                            <div class="mb-3">
+                                <label asp-for="Input.Treasurer_FirstName" class="form-label">First Name</label>
+                                <input asp-for="Input.Treasurer_FirstName" class="form-control" placeholder="Enter treasurer's name" />
+                                <span asp-validation-for="Input.Treasurer_FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Treasurer_LastName" class="form-label">Last Name</label>
+                                <input asp-for="Input.Treasurer_LastName" class="form-control" placeholder="Enter treasurer's name" />
+                                <span asp-validation-for="Input.Treasurer_LastName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Treasurer_Email" class="form-label">Email</label>
+                                <input asp-for="Input.Treasurer_Email" type="email" class="form-control" placeholder="Enter treasurer's email" />
+                                <span asp-validation-for="Input.Treasurer_Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Treasurer_PhoneNumber" class="form-label">Phone Number</label>
+                                <input asp-for="Input.Treasurer_PhoneNumber" type="tel" class="form-control" placeholder="Enter treasurer's phone number" />
+                                <span asp-validation-for="Input.Treasurer_PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <!-- Secretary Details -->
+                            <h4>Secretary Details</h4>
+                            <div class="mb-3">
+                                <label asp-for="Input.Secretary_FirstName" class="form-label">First name</label>
+                                <input asp-for="Input.Secretary_FirstName" class="form-control" placeholder="Enter secretary's name" />
+                                <span asp-validation-for="Input.Secretary_FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Secretary_LastName" class="form-label">Last Name</label>
+                                <input asp-for="Input.Secretary_LastName" class="form-control" placeholder="Enter secretary's name" />
+                                <span asp-validation-for="Input.Secretary_LastName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Secretary_Email" class="form-label">Email</label>
+                                <input asp-for="Input.Secretary_Email" type="email" class="form-control" placeholder="Enter secretary's email" />
+                                <span asp-validation-for="Input.Secretary_Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Input.Secretary_PhoneNumber" class="form-label">Phone Number</label>
+                                <input asp-for="Input.Secretary_PhoneNumber" type="tel" class="form-control" placeholder="Enter secretary's phone number" />
+                                <span asp-validation-for="Input.Secretary_PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Create Group</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+﻿@page "{id:int}"
+@model ElectronicCard.Pages.Ecard.ViewMembers.GroupDetailsModel
+@{
+    ViewData["Title"] = "Group Details";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group Details</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            border-radius: 0.5rem 0.5rem 0 0;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-radius: 1rem;
+        }
+
+        .member-card {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+
+            .member-card:hover {
+                background-color: #f8f9fa;
+            }
+
+        .total-savings {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .header h2
+
+        {
+            font-size: 1.5rem;
+        }
+
+        .total-savings {
+            font-size: 1.25rem;
+        }
+
+        }
+
+        form-check-input:checked {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .form-check-input:checked + .form-check-label .absent-label {
+            display: none !important;
+        }
+
+        .form-check-input:checked + .form-check-label .present-label {
+            display: inline !important;
+        }
+
+        .form-check-input:not(:checked) + .form-check-label .present-label {
+            display: none !important;
+        }
+
+        .form-check-input:not(:checked) + .form-check-label .absent-label {
+            display: inline !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Alerts -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- Group Details Card -->
+        <div class="card">
+            <div class="header">
+                <h2>@Model.Group.Group_Name</h2>
+                <p>Total Group Savings</p>
+                <h3 class="total-savings">@Model.TotalGroupSavings.ToString("C")</h3>
+                @if  (User.IsInRole("Secretary"))
+                {
+                <a href="/Ecard/AddMember" class="btn btn-success mt-3">
+                    <i class="fas fa-user-plus me-2"></i> Add Member
+                </a>
+                }
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <p><i class="fas fa-user-tie"></i> Chairman</p>
+                        <h6>@Model.Group.Chairman_FirstName</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p><i class="fas fa-wallet"></i> Treasurer</p>
+                        <h6>@Model.Group.Treasurer_FirstName</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p><i class="fas fa-user-edit"></i> Secretary</p>
+                        <h6>@Model.Group.Secretary_FirstName</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members List -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4><i class="fas fa-users me-2"></i>Members and Savings</h4>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Members != null && Model.Members.Any())
+                {
+                    foreach (var member in Model.Members)
+                    {
+                        <div class="member-card">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <h5>@member.First_Name</h5>
+                                    <small>
+                                        <i class="fas fa-envelope me-1"></i>@member.Email<br />
+                                        <i class="fas fa-phone me-1"></i>@member.PhoneNumber
+                                    </small>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <p>Total Savings</p>
+                                    <h5 class="total-savings">@Model.GetMemberSavings(member.Id).ToString("C")</h5>
+                                </div>
+                                <div class="col-md-5 text-end">
+                                    <!-- Add Savings Form -->
+                                    @if (User.IsInRole("Treasurer"))
+                                    {
+                                        <form method="post" asp-page-handler="AddSavings" asp-route-id="@Model.Group.Id" class='d-flex gap-2'>
+                                            <input type='hidden' name='memberId' value='@member.Id' />
+                                            <input type='number' name='amount' placeholder='Amount' min='0.01' step='0.01' required />
+                                            <button type='submit' class='btn btn-primary'>
+                                                Add
+                                            </button>
+                                        </form>
+
+
+                                    }
+                                    <div class="attendance-section mt-3">
+                                        @if (User.IsInRole("Secretary")){
+                                        <!-- Button to toggle attendance marking form -->
+                                        <button class="btn btn-outline-primary w-100 text-start mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#takeAttendanceSection-@member.Id" aria-expanded="false" aria-controls="takeAttendanceSection-@member.Id">
+                                            Take Attendance
+                                        </button>
+                                        }
+                                        <!-- Button to toggle attendance history -->
+                                        <button class="btn btn-outline-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#viewAttendanceSection-@member.Id" aria-expanded="false" aria-controls="viewAttendanceSection-@member.Id">
+                                           Attendance History 
+                                        </button>
+
+                                        <!-- Collapsible section for taking attendance -->
+                                        <div class="collapse mt-2" id="takeAttendanceSection-@member.Id">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Mark Attendance</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form method="post" asp-page-handler="MemberAttendance" id="attendanceForm-@member.Id">
+                                                        <input type="hidden" name="memberId" value="@member.Id" />
+
+                                                        <div class="row g-3 align-items-center mb-3">
+                                                            <div class="col-auto">
+                                                                <label for="meetingDay-@member.Id" class="col-form-label">Meeting Date:</label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <input type="date"
+                                                                       class="form-control"
+                                                                       id="meetingDay-@member.Id"
+                                                                       name="meetingDay"
+                                                                       value="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                                                       required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row g-3 align-items-center">
+                                                            <div class="col-auto">
+                                                                <label for="attendanceStatus-@member.Id" class="col-form-label">Status:</label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <select class="form-select"
+                                                                        id="attendanceStatus-@member.Id"
+                                                                        name="isPresent"
+                                                                        required>
+                                                                    <option value="">Select status...</option>
+                                                                    <option value="true">Present</option>
+                                                                    <option value="false">Absent</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <button type="submit" class="btn btn-primary">Save Attendance</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Collapsible section for viewing attendance history -->
+                                        <div class="collapse mt-2" id="viewAttendanceSection-@member.Id">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Attendance History</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Date</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if (Model.AttendanceHistory != null && Model.AttendanceHistory.Any())
+                                                                {
+                                                                    foreach (var attendance in Model.AttendanceHistory)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@attendance.MeetingDay.ToShortDateString()</td>
+                                                                            <td>
+                                                                                <span class="badge @(attendance.ConfirmAttendance ? "bg-success" : "bg-danger")">
+                                                                                    @(attendance.ConfirmAttendance ? "Present" : "Absent")
+                                                                                </span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">No attendance records found for the selected member.</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    </div>
+
+                                    <!-- View Card Button -->
+                                    <button class='btn btn-outline-primary mt-2' data-bs-toggle='modal' data-bs-target='#userCardModal-@member.Id'>
+                                        View Card
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div>
+                            @{
+                                var savingsHistory = Model.GetMemberSavingsHistory(member.Id);
+                                if (savingsHistory.Any())
+                                {
+                                    <small class='text-muted d-block mb-2'>Recent Transactions:</small>
+                                    foreach (var saving in savingsHistory.Take(3))
+                                    {
+                                        <span class='savings-badge'>
+                                            @saving.CreatedAt.ToShortDateString(): @saving.Amount_saved.ToString("C")
+                                        </span>
+                                        ;
+                                    }
+                                }
+                            }
+                        </div>
+
+                        <!-- Modal for Member Card -->
+                        <div class='modal fade' id='userCardModal-@member.Id' tabindex='-1' aria-labelledby='userCardModalLabel' aria-hidden='true'>
+                            <div class='modal-dialog'>
+                                <div class='modal-content'>
+                                    <div class='modal-header'>
+                                        <h5 class='modal-title'>@member.First_Name's Card</h5>
+                                        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                                    </div>
+                                    <div class='modal-body'>
+                                        <p><strong>Email:</strong> @member.Email</p>
+                                        <p><strong>Phone Number:</strong> @member.PhoneNumber</p>
+                                        <p><strong>Total Savings:</strong> @Model.GetMemberSavings(member.Id).ToString("C")</p>
+                                        <p><strong>CARD NO:</strong> @member.Card_no</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+                else
+                {
+                    <div class='text-center p-4 text-muted'>
+                        No members found for this group.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class='text-center mt-4'>
+            <a asp-page='/Ecard/ViewGroups' class='btn btn-outline-secondary'>
+                Back to Groups
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src='~/lib/bootstrap/dist/js/bootstrap.bundle.min.js'></script>
+
+    <!-- Auto-hide alerts after a period -->
+    <script>
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const closeButton = alert.querySelector('.btn-close');
+                if (closeButton) closeButton.click();
+            });
+        }, 3000);
+            document.addEventListener('DOMContentLoaded', function() {
+            const attendanceSwitches = document.querySelectorAll('.form-check-input[name="isPresent"]');
+
+            attendanceSwitches.forEach(switchInput => {
+                switchInput.addEventListener('change', function() {
+                    const presentLabel = this.nextElementSibling.querySelector('.present-label');
+                    const absentLabel = this.nextElementSibling.querySelector('.absent-label');
+
+                    if (this.checked) {
+                        presentLabel.classList.remove('d-none');
+                        absentLabel.classList.add('d-none');
+                    } else {
+                        presentLabel.classList.add('d-none');
+                        absentLabel.classList.remove('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+

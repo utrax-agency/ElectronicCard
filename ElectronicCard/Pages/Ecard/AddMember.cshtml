@@ -1,0 +1,141 @@
+﻿@page
+@model ElectronicCard.Pages.AddMember.AddMemberModel
+@{
+    ViewData["Title"] = "Add New Member";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Add New Member</h4>
+                    </div>
+                    <div class="card-body">
+                        @if (!ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            </div>
+                        }
+
+                        <form method="post">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Input.First_Name" class="form-label">First Name</label>
+                                    <input asp-for="Input.First_Name" class="form-control" />
+                                    <span asp-validation-for="Input.First_Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Last_Name" class="form-label">Last Name</label>
+                                    <input asp-for="Input.Last_Name" class="form-control" />
+                                    <span asp-validation-for="Input.Last_Name" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Card_no" class="form-label">Card Number</label>
+                                    <input asp-for="Input.Card_no" class="form-control" value="12345" readonly />
+                                    <span asp-validation-for="Input.Card_no" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Age" class="form-label">Age</label>
+                                    <input asp-for="Input.Age" class="form-control" type="number" min="18" max="100" />
+                                    <span asp-validation-for="Input.Age" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Gender" class="form-label">Gender</label>
+                                    <select asp-for="Input.Gender" class="form-select">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        
+                                    </select>
+                                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Group_id" class="form-label">Group</label>
+                                    <select asp-for="Input.Group_id" asp-items="Model.Groups" class="form-select">
+                                        <option value="">Select Group</option>
+                                    </select>
+                                    <span asp-validation-for="Input.Group_id" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Input.NIN" class="form-label">NIN</label>
+                                    <input asp-for="Input.NIN" class="form-control"  />
+                                    <span asp-validation-for="Input.Group_id" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="Input.PhoneNumber" class="form-label">Phone Number</label>
+                                    <input asp-for="Input.PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Input.Email" class="form-label">Email Address</label>
+                                    <input asp-for="Input.Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save me-2"></i>Add Member
+                                    </button>
+                                    <a asp-page="/Ecard/ViewGroups" class="btn btn-outline-secondary w-100 mt-2">
+                                        <i class="fas fa-times me-2"></i>Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery (required for the auto-generate card number script) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            // Auto-generate card number when the form loads
+            $(document).ready(function() {
+                if (!$("#Input_Card_no").val()) {
+                    const randomNum = Math.floor(Math.random() * 1000000);
+                    const cardNo = `CARD${randomNum.toString().padStart(6, '0')}`;
+                    $("#Input_Card_no").val(cardNo);
+                }
+            });
+        </script>
+    }
+</body>
+</html>
+

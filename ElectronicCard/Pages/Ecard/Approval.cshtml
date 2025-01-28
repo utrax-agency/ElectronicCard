@@ -1,0 +1,103 @@
+﻿@page
+@model ElectronicCard.Pages.Ecard.ChairmanVerificationModel
+@{
+    ViewData["Title"] = "Image Review";
+}
+<div>
+    <a href="/Ecard/Admin/ProvinceOverlook" class="btn btn-primary">
+        <i class="bi bi-arrow-left me-2"></i> Back   </a>
+</div>
+
+<div class="container">
+    <h2>Chairman Verification</h2>
+    <div class="mb-3">
+        <a asp-page="/Ecard/Approval" asp-route-status="all" class="btn btn-primary">All</a>
+        <a asp-page="/Ecard/Approval" asp-route-handler="approved" class="btn btn-success">Approved</a>
+        <a asp-page="/Ecard/Approval" asp-route-status="rejected" class="btn btn-danger">Pending</a>
+
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+			</tr>
+		
+        </thead>
+        <tbody>
+            @foreach (var chairman in Model.Chairmen)
+            {
+                <tr>
+                    <td>@chairman.FirstName @chairman.LastName</td>
+                    <td>@chairman.Email</td>
+                    <td>@chairman.PhoneNumber</td>
+                    <td>
+                        @switch (chairman.Status)
+                        {
+                            case ChairmanVerificationModel.VerificationStatus.Pending:
+                                <span class="badge bg-secondary">Pending</span>
+                                break;
+                            case ChairmanVerificationModel.VerificationStatus.Approved:
+                                <span class="badge bg-success">Approved</span>
+                                break;
+                            case ChairmanVerificationModel.VerificationStatus.Rejected:
+                                <span class="badge bg-danger">Rejected</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#imageModal-@chairman.ChairmanAccountId">
+                                View Images
+                            </button>
+                            <form method="post" class="d-inline">
+                                <input type="hidden" asp-for="@chairman.ChairmanAccountId" name="userId" value="@chairman.ChairmanAccountId" />
+                                <button type="submit" asp-page-handler="UpdateStatus" name="isApproved" value="true" class="btn btn-success btn-sm">Approve</button>
+                                <button type="submit" asp-page-handler="UpdateStatus" name="isApproved" value="false" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Image Modal -->
+                <div class="modal fade" id="imageModal-@chairman.ChairmanAccountId" tabindex="-1" aria-labelledby="imageModalLabel-@chairman.ChairmanAccountId" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel-@chairman.ChairmanAccountId">
+                                    @chairman.FirstName @chairman.LastName - Document Images
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h6>National ID (Front)</h6>
+                                        <img src="@chairman.NationalIdFrontPath" class="img-fluid mb-3" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>National ID (Back)</h6>
+                                        <img src="@chairman.NationalIdBackPath" class="img-fluid mb-3" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Selfie</h6>
+                                        <img src="@chairman.SelfiePath" class="img-fluid mb-3" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+}

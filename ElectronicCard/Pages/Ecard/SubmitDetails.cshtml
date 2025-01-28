@@ -1,0 +1,169 @@
+﻿@page
+@model ElectronicCard.Pages.Ecard.RegisterModel
+@{
+    ViewData["Title"] = "Chairman Verification";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chairman Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .verification-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .file-input-wrapper input[type=file] {
+                font-size: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+            }
+
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .preview-image {
+            max-height: 200px;
+            max-width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .file-input-label {
+            background-color: #e9ecef;
+            border: 2px dashed #ced4da;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .file-input-label:hover {
+                background-color: #f8f9fa;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="verification-card">
+            <h2 class="text-center mb-4">Chairman Verification</h2>
+
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-4">
+                    <label asp-for="NationalIdFrontPath" class="form-label fw-bold">National ID Front</label>
+                    <div class="file-input-wrapper">
+                        <label class="form-control file-input-label" for="NationalIdFront">
+                            <span id="frontFileName">Choose file</span>
+                            <input type="file" class="form-control" id="NationalIdFront" name="NationalIdFront"
+                                   accept="image/*" onchange="previewImage(event, 'imagePreviewFront', 'frontFileName')" required />
+                        </label>
+                    </div>
+                    <div class="form-text text-muted">Accepted formats: JPG, PNG, GIF. Max size: 5MB</div>
+                    <div class="preview-container">
+                        <img id="imagePreviewFront" src="#" alt="Front ID Preview" class="preview-image d-none" />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="NationalIdBack" class="form-label fw-bold">National ID Back</label>
+                    <div class="file-input-wrapper">
+                        <label class="form-control file-input-label" for="NationalIdBack">
+                            <span id="backFileName">Choose file</span>
+                            <input type="file" class="form-control" id="NationalIdBack" name="NationalIdBack"
+                                   accept="image/*" onchange="previewImage(event, 'imagePreviewBack', 'backFileName')" required />
+                        </label>
+                    </div>
+                    <div class="form-text text-muted">Accepted formats: JPG, PNG, GIF. Max size: 5MB</div>
+                    <div class="preview-container">
+                        <img id="imagePreviewBack" src="#" alt="Back ID Preview" class="preview-image d-none" />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Selfie" class="form-label fw-bold">Selfie</label>
+                    <div class="file-input-wrapper">
+                        <label class="form-control file-input-label" for="Selfie">
+                            <span id="selfieFileName">Choose file</span>
+                            <input type="file" class="form-control" id="Selfie" name="Selfie"
+                                   accept="image/*" onchange="previewImage(event, 'imagePreviewSelfie', 'selfieFileName')" required />
+                        </label>
+                    </div>
+                    <div class="form-text text-muted">Accepted formats: JPG, PNG, GIF. Max size: 5MB</div>
+                    <div class="preview-container">
+                        <img id="imagePreviewSelfie" src="#" alt="Selfie Preview" class="preview-image d-none" />
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Submit Verification</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function previewImage(event, previewId, fileNameId) {
+            const reader = new FileReader();
+            const file = event.target.files[0];
+            const fileName = document.getElementById(fileNameId);
+            const output = document.getElementById(previewId);
+
+            fileName.textContent = file ? file.name : 'Choose file';
+
+            reader.onload = function() {
+                output.src = reader.result;
+                output.classList.remove('d-none');
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+</html>

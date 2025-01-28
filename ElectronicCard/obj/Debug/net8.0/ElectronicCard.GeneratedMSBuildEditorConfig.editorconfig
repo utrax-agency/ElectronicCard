@@ -1,0 +1,121 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = ElectronicCard
+build_property.RootNamespace = ElectronicCard
+build_property.ProjectDir = C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\emman\source\repos\ElectronicCard\ElectronicCard
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/AddMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcQWRkTWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Admin/Overview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcQWRtaW5cT3ZlcnZpZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Admin/ProvinceOverlook.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcQWRtaW5cUHJvdmluY2VPdmVybG9vay5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Approval.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcQXBwcm92YWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Home.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcSG9tZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcTG9nb3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ProvinceUser/ProvinceGroups.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUHJvdmluY2VVc2VyXFByb3ZpbmNlR3JvdXBzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ProvinceUser/ProvinceSavings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUHJvdmluY2VVc2VyXFByb3ZpbmNlU2F2aW5ncy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ProvinceUser/Report.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUHJvdmluY2VVc2VyXFJlcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUmVnaXN0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUmVzZXRQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ReviewPending.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcUmV2aWV3UGVuZGluZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/SubmitDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcU3VibWl0RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ViewGroups.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcVmlld0dyb3Vwcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Ecard/ViewMembers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWNhcmRcVmlld01lbWJlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/emman/source/repos/ElectronicCard/ElectronicCard/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-9cim7u3t4c

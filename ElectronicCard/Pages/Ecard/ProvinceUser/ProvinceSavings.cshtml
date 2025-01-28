@@ -1,0 +1,211 @@
+﻿@page "{id:int}"
+@model ElectronicCard.Pages.Ecard.ProvinceUser.ProvinceSavingsModel
+@{
+    ViewData["Title"] = $"Province Savings - {Model.Province?.Province_Name}";
+    
+}
+
+<a href="/Ecard/Admin/ProvinceOverlook" class="btn btn-light">
+    <i class="fas fa-sign-out-alt"></i> Back
+</a>
+
+<div class="container mt-4">
+    <!-- Province Overview -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Province Overview:</h5>
+            <p><strong>Province Name:</strong> @Model.Province?.Province_Name</p>
+            <p><strong>Total Province Savings:</strong> @Model.TotalProvinceSavings.ToString("C2")</p>
+            <p><strong>Number of Groups:</strong> @(Model.GroupSavings?.Count ?? 0)</p>
+        </div>
+    </div>
+    <a href="/Ecard/Admin/ProvinceOverlook" class="btn btn-light">
+        <i class="fas fa-sign-out-alt"></i> Back
+    </a>
+
+    <!-- Group and Member Details -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">@Model.Province?.Province_Name Province - Groups and Members</h2>
+
+            <div class="accordion" id="groupAccordion">
+                @if (Model.Province?.Groups != null)
+                {
+                    @foreach (var group in Model.Province.Groups.OrderByDescending(g => g.Members?.Count ?? 0))
+                    {
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-@group.Id">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@group.Id" aria-expanded="false" aria-controls="collapse-@group.Id">
+                                    @group.Group_Name 
+                                </button>
+                            </h2>
+                            <div id="collapse-@group.Id" class="accordion-collapse collapse" aria-labelledby="heading-@group.Id" data-bs-parent="#groupAccordion">
+                                <div class="accordion-body">
+                                    <h5>Group Overview:</h5>
+                                    <p><strong>Chairman:</strong> @group.Chairman_FirstName @group.Chairman_LastName </p>
+                                    <p><strong>Treasurer:</strong> @group.Treasurer_FirstName @group.Treasurer_LastName </p>
+                                    <p><strong>Secretary:</strong> @group.Secretary_FirstName  @group.Secretary_LastName</p>
+
+                                    <h5>Members:</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Savings</th>
+                                                    <th>Card no.</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var member in group.Members ?? Enumerable.Empty<Member>())
+                                                {
+                                                    <tr>
+                                                        <td>@member.First_Name @member.Last_Name</td>
+                                                        <td>@member.Savings</td>
+                                                        <td>@member.Card_no</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No groups available for this province.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section (Side by Side) -->
+    <div class="row">
+        <!-- Line Chart for Monthly Group Savings -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Monthly Group Savings</h2>
+                    <canvas id="groupSavingsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart for Group Savings Proportions -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Province Group Savings Distribution</h2>
+                    <canvas id="groupSavingsPieChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctxLine = document.getElementById('groupSavingsChart').getContext('2d');
+            var chartData = @Html.Raw(Json.Serialize(Model.MonthlyGroupSavings));
+
+            // Line Chart Data
+            for (var group in chartData) {
+                if (chartData.hasOwnProperty(group)) {
+                    var labels = [];
+                    var savingsData = [];
+
+                    for (var month in chartData[group]) {
+                        labels.push(month);
+                        savingsData.push(chartData[group][month]);
+                    }
+
+                    new Chart(ctxLine, {
+                        type: 'bar', // Changed from 'line' to 'bar' for horizontal chart
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: group + ' Savings',
+                                data: savingsData,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                fill: false,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            indexAxis: 'y', // This makes the chart horizontal
+                            plugins: {
+                                legend: { position: 'top' },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (tooltipItem) {
+                                            return 'Savings: ' + tooltipItem.raw.toLocaleString('en-UG', {
+                                                style: 'currency',
+                                                currency: 'UGX',
+                                                minimumFractionDigits: 0
+                                            });
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: { beginAtZero: true }, // Ensures x-axis starts at 0
+                                y: { beginAtZero: true }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Pie Chart Data
+            var ctxPie = document.getElementById('groupSavingsPieChart').getContext('2d');
+            var groupSavings = @Html.Raw(Json.Serialize(Model.GroupSavings));
+
+            // Prepare Pie chart data: labels and values
+            var pieLabels = [];
+            var pieData = [];
+
+            for (var group in groupSavings) {
+                if (groupSavings.hasOwnProperty(group)) {
+                    pieLabels.push(group);
+                    pieData.push(groupSavings[group]);
+                }
+            }
+
+            new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: pieLabels,
+                    datasets: [{
+                        label: 'Group Savings',
+                        data: pieData,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString('en-UG', {
+                                        style: 'currency',
+                                        currency: 'UGX',
+                                        minimumFractionDigits: 0
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,212 @@
+﻿@page
+@model ElectronicCard.Pages.Ecard.Admin.ProvinveOverlook.ProvincePerformanceModel
+@{
+    ViewData["Title"] = "Province Performance Overview";
+}
+<a href="/Ecard/Logout" class="btn btn-light">
+    <i class="fas fa-sign-out-alt"></i> Logout
+</a>
+<div class="d-flex justify-content-end mb-4">
+    <a href="/Ecard/Approval" class="btn btn-primary btn-lg shadow rounded-pill px-5">
+        <i class="bi bi-check-circle-fill me-2"></i> Approvals
+    </a>
+</div>
+
+<div class="container mt-4">
+    <!-- System Overview -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>System Overview:</h5>
+            <p><strong>Total System Savings:</strong> @Model.TotalSystemSavings.ToString("C2")</p>
+            <p><strong>Number of Provinces:</strong> @(Model.Provinces?.Count ?? 0)</p>
+        </div>
+    </div>
+    <div class="mb-8">
+        <label for="provinceSelector">Select a Province:</label>
+        <select id="provinceSelector" class="mt-2 p-2 rounded bg-gray-800 text-black border border-gray-700" onchange="location = this.value;">
+            <option value="">-- Select a province --</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/1">Buddu</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/2">Busiro</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/3">Bugwere</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/4">Kyagwe</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/5">Mawokota</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/6">Ssingo</option>
+            <option value="/Ecard/ProvinceUser/ProvinceSavings/7">Buluuli</option>
+        </select>
+    </div>
+
+    <!-- Province Performance Cards -->
+    <div class="row">
+        @foreach (var province in Model.Provinces)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">@province.Province_Name</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Total Savings:</strong> @Model.ProvinceSavings[province.Id].ToString("C2")</p>
+                        <p><strong>Number of Groups:</strong> @(province.Groups?.Count ?? 0)</p>
+
+                        <!-- Province Monthly Savings Chart -->
+                        <div style="height: 300px;" class="mb-4">
+                            <canvas id="monthlyChart_@province.Id"></canvas>
+                        </div>
+
+                        <!-- Province Group Distribution Chart -->
+                        <div style="height: 300px;">
+                            <canvas id="groupChart_@province.Id"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Comparative Analysis -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Provincial Comparison</h2>
+            <div style="height: 400px;">
+                <canvas id="provinceComparisonChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function generateColors(count) {
+                const colors = [];
+                for (let i = 0; i < count; i++) {
+                    const hue = (i * 137.508) % 360;
+                    colors.push(`hsl(${hue}, 70%, 60%)`);
+                }
+                return colors;
+            }
+
+            function formatCurrency(value, currencyCode = 'UGX') {
+                return new Intl.NumberFormat('en-UG', {
+                    style: 'currency',
+                    currency: currencyCode,
+                    minimumFractionDigits: 0, // Remove decimal points for UGX
+                }).format(value);
+            }
+
+            // Create charts for each province
+        @foreach (var province in Model.Provinces)
+    {
+        var chartData = Model.ProvinceCharts[province.Id];
+
+        <text>
+                    // Monthly savings chart
+                    new Chart(document.getElementById('monthlyChart_@province.Id'), {
+                        type: 'line',
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(chartData.MonthlyLabels)),
+                            datasets: [{
+                                label: 'Monthly Savings',
+                                data: @Html.Raw(Json.Serialize(chartData.MonthlyValues)),
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                fill: true,
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Monthly Savings Trend'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => 'Savings: ' + formatCurrency(context.raw)
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: (value) => formatCurrency(value)
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Group distribution chart
+                    const groupColors_@province.Id = generateColors(@chartData.GroupLabels.Length);
+                    new Chart(document.getElementById('groupChart_@province.Id'), {
+                        type: 'pie',
+                        data: {
+                            labels: @Html.Raw(Json.Serialize(chartData.GroupLabels)),
+                            datasets: [{
+                                data: @Html.Raw(Json.Serialize(chartData.GroupValues)),
+                                backgroundColor: groupColors_@province.Id
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Group Savings Distribution'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => {
+                                            const value = formatCurrency(context.raw);
+                                            const total = @chartData.GroupValues.Sum();
+                                            const percentage = ((context.raw / total) * 100).toFixed(1);
+                                            return `${context.label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+        </text>
+    }
+
+        // Province comparison chart
+        const provinceColors = generateColors(@Model.Provinces.Count);
+        new Chart(document.getElementById('provinceComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.Provinces.Select(p => p.Province_Name))),
+                datasets: [{
+                    label: 'Total Savings per Province',
+                    data: @Html.Raw(Json.Serialize(Model.Provinces.Select(p => Model.ProvinceSavings[p.Id]))),
+                    backgroundColor: provinceColors
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => 'Savings: ' + formatCurrency(context.raw)
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: (value) => formatCurrency(value)
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+}
