@@ -77,13 +77,13 @@ namespace ElectronicCard.Pages.Ecard.Login
                         var user = await _userManager.FindByEmailAsync(Input.Email);
                         if (user != null)
                         {
-                            if (!user.status)
+                            if ((bool)!user.status)
                             {
                                 _logger.LogInformation("User {Email} has a pending review status. Redirecting to ReviewPending.", Input.Email);
                                 return LocalRedirect(Url.Content("~/Ecard/ReviewPending"));
                             }
 
-                            if (user.status)
+                            if ((bool)user.status)
                             {
                                 _logger.LogInformation("User {Email} found in database with active status.", Input.Email);
 

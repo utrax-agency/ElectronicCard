@@ -171,3 +171,4 @@ C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Release\net8.0\ref
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Release\net8.0\ElectronicCard.pdb
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Release\net8.0\ElectronicCard.genruntimeconfig.cache
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Release\net8.0\ref\ElectronicCard.dll
+C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Release\net8.0\ElectronicCard.sourcelink.json

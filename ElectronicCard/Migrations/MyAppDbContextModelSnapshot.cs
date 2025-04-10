@@ -102,7 +102,7 @@ namespace ElectronicCard.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("status")
+                    b.Property<bool?>("status")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -160,6 +160,9 @@ namespace ElectronicCard.Migrations
                     b.Property<string>("ChairmanAccountId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NationalIdBackPath")
                         .IsRequired()
@@ -345,6 +348,12 @@ namespace ElectronicCard.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -359,6 +368,9 @@ namespace ElectronicCard.Migrations
 
                     b.Property<int>("Group_id")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Last_Name")
                         .IsRequired()

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElectronicCard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da4e8f3414fffc39d5ab8cb75f792e05b1ff299c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElectronicCard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElectronicCard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -11,7 +11,7 @@ namespace ElectronicCard.Models
 
         public string PhoneNumber {  get; set; }    
 
-        public bool status {  get; set; }
+        public bool? status {  get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string Role { get; set; }
         [ValidateNever]

@@ -71,6 +71,15 @@ namespace ElectronicCard.Pages.Ecard.Register
                 TempData["ErrorMessage"] = "An error occurred while loading the register page. Please try again later.";
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> OnGetCheckStatusAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound("User not found");
+
+            return new JsonResult(new { status = user.status });
+        }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -98,7 +107,7 @@ namespace ElectronicCard.Pages.Ecard.Register
                         FirstName = Input.FirstName,
                         LastName = Input.LastName,
                         PhoneNumber = Input.PhoneNumber,
-                        status = false,
+                        status = null,
                         Role = Input.Role,
                         CreatedAt = DateTime.UtcNow,
                         CreatedByUserId = Input.Role

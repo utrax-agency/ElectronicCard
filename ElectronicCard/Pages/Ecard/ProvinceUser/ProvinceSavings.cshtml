@@ -4,6 +4,41 @@
     ViewData["Title"] = $"Province Savings - {Model.Province?.Province_Name}";
     
 }
+<head>
+
+    <style>
+        .group-overview {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .role-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+            .role-card h4 {
+                margin: 0 0 10px 0;
+                color: #333;
+            }
+
+            .role-card p {
+                margin: 5px 0;
+            }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
 
 <a href="/Ecard/Admin/ProvinceOverlook" class="btn btn-light">
     <i class="fas fa-sign-out-alt"></i> Back
@@ -41,10 +76,40 @@
                             </h2>
                             <div id="collapse-@group.Id" class="accordion-collapse collapse" aria-labelledby="heading-@group.Id" data-bs-parent="#groupAccordion">
                                 <div class="accordion-body">
-                                    <h5>Group Overview:</h5>
-                                    <p><strong>Chairman:</strong> @group.Chairman_FirstName @group.Chairman_LastName </p>
-                                    <p><strong>Treasurer:</strong> @group.Treasurer_FirstName @group.Treasurer_LastName </p>
-                                    <p><strong>Secretary:</strong> @group.Secretary_FirstName  @group.Secretary_LastName</p>
+                                    <div class="group-overview">
+                                        <h3>Group Overview</h3>
+
+                                        <div class="role-card">
+                                            <h4>Chairman</h4>
+                                            <p>@group.Chairman_FirstName @group.Chairman_LastName</p>
+                                            <p>
+                                                <a href="tel:@group.Chairman_PhoneNumber">@group.Chairman_PhoneNumber</a>
+                                                <br>
+                                                <a href="mailto:@group.Chairman_Email">@group.Chairman_Email</a>
+                                            </p>
+                                        </div>
+
+                                        <div class="role-card">
+                                            <h4>Treasurer</h4>
+                                            <p>@group.Treasurer_FirstName @group.Treasurer_LastName</p>
+                                            <p>
+                                                <a href="tel:@group.Treasurer_PhoneNumber">@group.Treasurer_PhoneNumber</a>
+                                                <br>
+                                                <a href="mailto:@group.Treasurer_Email">@group.Treasurer_Email</a>
+                                            </p>
+                                        </div>
+
+                                        <div class="role-card">
+                                            <h4>Secretary</h4>
+                                            <p>@group.Secretary_FirstName @group.Secretary_LastName</p>
+                                            <p>
+                                                <a href="tel:@group.Secretary_PhoneNumber">@group.Secretary_PhoneNumber</a>
+                                                <br>
+                                                <a href="mailto:@group.Secretary_Email">@group.Secretary_Email</a>
+                                            </p>
+                                        </div>
+
+                                    </div>
 
                                     <h5>Members:</h5>
                                     <div class="table-responsive">

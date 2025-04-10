@@ -26,6 +26,7 @@ namespace ElectronicCard.Pages.Ecard
 
         // List to store groups
         public List<Group> Groups { get; set; }
+        public string UserRole { get; set; }
 
         // Properties for stats
         public int TotalGroups { get; set; }
@@ -35,6 +36,10 @@ namespace ElectronicCard.Pages.Ecard
         {
             try
             {
+                var user = await _userManager.GetUserAsync(User);
+                var roles = await _userManager.GetRolesAsync(user);
+                UserRole = roles.Count > 0 ? roles[0] : "No role assigned";  // Get the first role (Chairman, Secretary, etc.)
+
                 // Get the ID of the currently logged-in user
                 var userId = _userManager.GetUserId(User);
 

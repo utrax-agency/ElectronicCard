@@ -12,5 +12,6 @@
         public string NationalIdFrontPath { get; set; }
         public string NationalIdBackPath { get; set; }
         public string SelfiePath { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

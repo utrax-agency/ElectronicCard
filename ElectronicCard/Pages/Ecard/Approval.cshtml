@@ -7,14 +7,13 @@
     <a href="/Ecard/Admin/ProvinceOverlook" class="btn btn-primary">
         <i class="bi bi-arrow-left me-2"></i> Back   </a>
 </div>
-
 <div class="container">
     <h2>Chairman Verification</h2>
     <div class="mb-3">
         <a asp-page="/Ecard/Approval" asp-route-status="all" class="btn btn-primary">All</a>
-        <a asp-page="/Ecard/Approval" asp-route-handler="approved" class="btn btn-success">Approved</a>
-        <a asp-page="/Ecard/Approval" asp-route-status="rejected" class="btn btn-danger">Pending</a>
-
+        <a asp-page="/Ecard/Approval" asp-route-status="approved" class="btn btn-success">Approved</a>
+        <a asp-page="/Ecard/Approval" asp-route-status="pending" class="btn btn-warning">Pending</a>
+        <a asp-page="/Ecard/Approval" asp-route-status="rejected" class="btn btn-danger">Rejected</a>
     </div>
 
     <table class="table">
@@ -25,8 +24,7 @@
                 <th>Phone</th>
                 <th>Status</th>
                 <th>Actions</th>
-			</tr>
-		
+            </tr>
         </thead>
         <tbody>
             @foreach (var chairman in Model.Chairmen)
@@ -38,13 +36,13 @@
                     <td>
                         @switch (chairman.Status)
                         {
-                            case ChairmanVerificationModel.VerificationStatus.Pending:
+                            case null:
                                 <span class="badge bg-secondary">Pending</span>
                                 break;
-                            case ChairmanVerificationModel.VerificationStatus.Approved:
+                            case true:
                                 <span class="badge bg-success">Approved</span>
                                 break;
-                            case ChairmanVerificationModel.VerificationStatus.Rejected:
+                            case false:
                                 <span class="badge bg-danger">Rejected</span>
                                 break;
                         }
@@ -56,48 +54,49 @@
                                 View Images
                             </button>
                             <form method="post" class="d-inline">
-                                <input type="hidden" asp-for="@chairman.ChairmanAccountId" name="userId" value="@chairman.ChairmanAccountId" />
-                                <button type="submit" asp-page-handler="UpdateStatus" name="isApproved" value="true" class="btn btn-success btn-sm">Approve</button>
-                                <button type="submit" asp-page-handler="UpdateStatus" name="isApproved" value="false" class="btn btn-danger btn-sm">Reject</button>
+                                <input type="hidden" name="userId" value="@chairman.ChairmanAccountId" />
+
+                                <button type="submit" asp-page-handler="UpdateStatus" name="status" value="true" class="btn btn-success btn-sm">
+                                    Approve
+                                </button>
+
+                                <button type="submit" asp-page-handler="UpdateStatus" name="status" value="false" class="btn btn-danger btn-sm">
+                                    Reject
+                                </button>
                             </form>
                         </div>
                     </td>
                 </tr>
-
-                <!-- Image Modal -->
-                <div class="modal fade" id="imageModal-@chairman.ChairmanAccountId" tabindex="-1" aria-labelledby="imageModalLabel-@chairman.ChairmanAccountId" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="imageModalLabel-@chairman.ChairmanAccountId">
-                                    @chairman.FirstName @chairman.LastName - Document Images
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <h6>National ID (Front)</h6>
-                                        <img src="@chairman.NationalIdFrontPath" class="img-fluid mb-3" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h6>National ID (Back)</h6>
-                                        <img src="@chairman.NationalIdBackPath" class="img-fluid mb-3" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h6>Selfie</h6>
-                                        <img src="@chairman.SelfiePath" class="img-fluid mb-3" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             }
         </tbody>
     </table>
-</div>
 
+    <!-- Pagination Controls -->
+    <nav>
+        <ul class="pagination">
+            @if ((int)ViewData["CurrentPage"] > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-page="/Ecard/Approval" asp-route-status="@ViewData["Status"]" asp-route-pageNumber="@( (int)ViewData["CurrentPage"] - 1 )">Previous</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+            {
+                <li class="page-item @( (int)ViewData["CurrentPage"] == i ? "active" : "" )">
+                    <a class="page-link" asp-page="/Ecard/Approval" asp-route-status="@ViewData["Status"]" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+
+            @if ((int)ViewData["CurrentPage"] < (int)ViewData["TotalPages"])
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-page="/Ecard/Approval" asp-route-status="@ViewData["Status"]" asp-route-pageNumber="@( (int)ViewData["CurrentPage"] + 1 )">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-}
+}    

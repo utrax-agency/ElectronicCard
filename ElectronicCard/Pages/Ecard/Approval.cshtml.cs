@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 namespace ElectronicCard.Pages.Ecard
 {
-        
+
     [Authorize(Roles = "Admin ")]
     public class ChairmanVerificationModel : PageModel
     {
@@ -35,7 +35,7 @@ namespace ElectronicCard.Pages.Ecard
             public string NationalIdFrontPath { get; set; }
             public string NationalIdBackPath { get; set; }
             public string SelfiePath { get; set; }
-            public VerificationStatus Status { get; set; }
+            public bool? Status { get; set; }
         }
 
         public enum VerificationStatus
@@ -47,52 +47,55 @@ namespace ElectronicCard.Pages.Ecard
 
         public List<ChairmanVerificationViewModel> Chairmen { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string status)
+        public async Task<IActionResult> OnGetAsync(string status = "all", int pageNumber = 1, int pageSize = 12)
         {
             try
             {
-                _logger.LogInformation("Fetching chairman verification list...");
+                _logger.LogInformation("Fetching chairman verification list with status: {Status}, Page: {PageNumber}", status, pageNumber);
 
-                // Initialize the queryable users collection
+                // Base query for chairman users
                 IQueryable<ApplicationUser> usersQuery = _context.Users.Where(u => u.Role == "Chairman");
 
                 // Apply filters based on status parameter
-                if (status == "approved")
+                switch (status.ToLower())
                 {
-                    // Query for approved users
-                    usersQuery = usersQuery.Where(u => u.status == true);
-                    _logger.LogInformation("Filtering for approved chairman users.");
-                }
-                else if (status == "rejected")
-                {
-                    // Query for rejected users
-                    usersQuery = usersQuery.Where(u => u.status == false);
-                    _logger.LogInformation("Filtering for rejected chairman users.");
-                }
-                else
-                {
-                    // Query for all users
-                    _logger.LogInformation("Fetching all chairman users.");
+                    case "approved":
+                        usersQuery = usersQuery.Where(u => u.status == true);
+                        break;
+                    case "rejected":
+                        usersQuery = usersQuery.Where(u => u.status == false);
+                        break;
+                    case "pending":
+                        usersQuery = usersQuery.Where(u => u.status == null);
+                        break;
+                    case "all":
+                    default:
+                        break;
                 }
 
-                // Execute the query and retrieve the users
-                var users = await usersQuery.ToListAsync();
+                // Get total number of records (for pagination)
+                int totalRecords = await usersQuery.CountAsync();
+                int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
 
-                _logger.LogInformation($"Retrieved {users.Count} chairman users.");
+                // Fetch only the records for the current page
+                var users = await usersQuery
+                    .OrderBy(u => u.FirstName) // Adjust sorting if needed
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-                // Retrieve chairman images linked to these users
+                // Get chairman IDs
                 var chairmanIds = users.Select(u => u.Id).ToList();
+
+                // Fetch chairman images
                 var chairmanImages = await _context.ChairmanImages
                     .Where(ci => chairmanIds.Contains(ci.ChairmanAccountId))
                     .ToListAsync();
 
-                _logger.LogInformation($"Retrieved images for {chairmanImages.Count} chairmen.");
-
-                // Map data to the view model
+                // Map data to view model
                 Chairmen = users.Select(u =>
                 {
                     var images = chairmanImages.FirstOrDefault(ci => ci.ChairmanAccountId == u.Id);
-
                     return new ChairmanVerificationViewModel
                     {
                         ChairmanAccountId = u.Id,
@@ -103,31 +106,27 @@ namespace ElectronicCard.Pages.Ecard
                         NationalIdFrontPath = images?.NationalIdFrontPath,
                         NationalIdBackPath = images?.NationalIdBackPath,
                         SelfiePath = images?.SelfiePath,
-                        Status = DetermineVerificationStatus(u.status)
+                        Status = u.status
                     };
                 }).ToList();
+
+                // Set pagination data for the Razor page
+                ViewData["TotalPages"] = totalPages;
+                ViewData["CurrentPage"] = pageNumber;
+                ViewData["Status"] = status;
 
                 return Page();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving the chairman verification list.");
+                TempData["ErrorMessage"] = "An error occurred while loading chairman data.";
                 return RedirectToPage("/Error");
             }
         }
 
-        private static VerificationStatus DetermineVerificationStatus(bool? status)
-        {
-            return status switch
-            {
-                true => VerificationStatus.Approved,  // Approved
-                false => VerificationStatus.Rejected, // Rejected
-                null => VerificationStatus.Pending,   // Pending (if null)
-            };
-        }
 
-
-        public async Task<IActionResult> OnPostUpdateStatusAsync(string userId, bool isApproved)
+        public async Task<IActionResult> OnPostUpdateStatusAsync(string userId, bool? status)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -138,8 +137,6 @@ namespace ElectronicCard.Pages.Ecard
 
             try
             {
-                _logger.LogInformation($"Updating verification status for user {userId} to {(isApproved ? "Approved" : "Rejected")}");
-
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null)
                 {
@@ -147,12 +144,16 @@ namespace ElectronicCard.Pages.Ecard
                     return NotFound();
                 }
 
-                user.status = isApproved;
-                var result = await _userManager.UpdateAsync(user);
+                // Assign the received status value
+                user.status = status;
+                string statusText = status == true ? "Approved" : status == false ? "Rejected" : "Pending";
+                _logger.LogInformation($"Setting status to {statusText} for user {userId}");
 
+                var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"Successfully updated verification status for user {userId}.");
+                    _logger.LogInformation($"Successfully updated verification status for user {userId}");
+                    TempData["SuccessMessage"] = $"Status updated to {statusText}";
                     return RedirectToPage();
                 }
                 else
@@ -164,12 +165,11 @@ namespace ElectronicCard.Pages.Ecard
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error updating verification status for user {userId}");
+                TempData["ErrorMessage"] = "An error occurred while updating the status.";
             }
 
-            return RedirectToPage("/Error");
+            return RedirectToPage();
         }
-
-       
     }
-}
+    }
 

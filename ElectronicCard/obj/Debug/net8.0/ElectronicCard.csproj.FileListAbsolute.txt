@@ -170,4 +170,4 @@ C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\refin
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\ElectronicCard.pdb
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\ElectronicCard.genruntimeconfig.cache
 C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\ref\ElectronicCard.dll
-C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\emman\source\repos\ElectronicCard\ElectronicCard\obj\Debug\net8.0\ElectronicCard.sourcelink.json

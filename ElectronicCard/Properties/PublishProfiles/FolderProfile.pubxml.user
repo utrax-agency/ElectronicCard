@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\UTRAX PROJECTS\Deployments</_PublishTargetUrl>
-    <History>True|2025-01-21T12:38:00.8237623Z||;</History>
+    <History>True|2025-02-19T12:32:36.7145917Z||;True|2025-01-28T17:12:19.1856453+03:00||;True|2025-01-21T15:38:00.8237623+03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
